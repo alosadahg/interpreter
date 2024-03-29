@@ -12,7 +12,7 @@ public class Interpreter{
     public static void main(String[] args) throws IOException {
         //first step: configuring which way to run the script
         if(args.length > 1) {
-            System.out.println("Usage: jlox [script]");
+            System.out.println("Usage: interpreter made using java");
             System.exit(64);
         } else if(args.length == 1) {
             runFile(args[0]);
