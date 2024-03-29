@@ -1,4 +1,4 @@
-To-do
-[] Lexer
-[] Parser
-[] Semantic Analyzer
+To-do  
+- [ ] Lexer  
+- [ ] Parser  
+- [ ] Semantic Analyzer  
