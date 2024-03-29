@@ -1,8 +1,8 @@
 ## To-do  
 ### Lexer
-- [ ] Single character lexemes
-- [ ] Single or paired character lexemes
-- [ ] Comments
+- [x] Single character lexemes
+- [x] Single or paired character lexemes
+- [x] Comments
 - [ ] Numbers
 - [ ] Reserved Keywords  
 ### Parser 
