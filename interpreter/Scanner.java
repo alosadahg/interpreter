@@ -249,7 +249,11 @@ public class Scanner {
                 break;
             case '"': string(); break;
             default:
-                Interpreter.error(line, "Unexpected character.");
+                if(isAlphaNumeric(c)){
+                    break;
+                } else{
+                    Interpreter.error(line, "Unexpected character.");
+                }
                 break;
         }
     }
