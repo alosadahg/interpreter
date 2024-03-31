@@ -82,12 +82,11 @@ public class Scanner {
                 break;
             // for slash
             case '/':
-                if(match('/')) {
-                    // comment goes on until new line
-                    while(lookAhead() != '\n' && !isAtEnd()) nextChar();
-                } else {
-                    addToken(SLASH);
-                }
+                addToken(SLASH);
+                break;
+            //comment
+            case '#':
+                while(lookAhead() != '\n' && !isAtEnd()) nextChar();
                 break;
             //whitespaces
             case ' ':
