@@ -10,7 +10,11 @@ enum TokenType {
 
     //Keywords
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, 
-    NULL, OR, PRINT, SUPER, THIS, TRUE, VAR, WHILE,
+    NULL, OR, PRINT, SUPER, THIS, TRUE, VAR, WHILE, RETURN,
+
+    //Code Block Start
+
+    RESERVED_KEYWORD,
 
     EOF
 }
