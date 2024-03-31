@@ -6,7 +6,7 @@ enum TokenType {
 
     //One or two character token pair
     NOT, NOT_EQUAL, ASSIGN, EQUAL_EVAL, GREATER_THAN,
-    GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL,
+    GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL, MODULO,
 
     //Keywords
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, 
