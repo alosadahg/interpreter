@@ -147,6 +147,7 @@ public class Scanner {
             }
             addToken(type);
         }
+
     }
 
     private void scanToken() {
