@@ -59,14 +59,16 @@ public class Scanner {
         switch(c) {
             case '(': addToken(TokenType.LEFT_PAREN); break;
             case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
+            case '[': addToken(LEFT_BRACKET); break;
+            case ']': addToken(RIGHT_BRACKET); break;
             case ',': addToken(COMMA); break;
             case '.': addToken(DOT); break;
             case '-': addToken(MINUS); break;
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+            case '$': addToken(NEW_LINE); break;
+            case '&': addToken(CONCAT); break;
             //operators
             case '!': 
                 addToken(match('=') ? NOT_EQUAL : NOT);
