@@ -118,6 +118,21 @@ public class Scanner {
                     addToken(CODE);
                 }
                 break;
+            case 'O':
+                if(match('R')){
+                    addToken(OR);
+                }
+                break;
+            case 'A':
+                if (match('N') && match('D')){
+                    addToken(AND);
+                }
+                break;
+            case 'N':
+                if (match('O') && match('T')){
+                    addToken(NOT);
+                }
+                break;
             case '"': string(); break;
             default:
                 if (isAlpha(c)) {
