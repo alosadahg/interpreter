@@ -14,12 +14,10 @@ enum TokenType {
     //Logical Operators
     OR, AND, NOT,
 
-    //Code Block Start
-
-    RESERVED_KEYWORD,
-
     //data types
     STRING, INT, FLOAT,
+
+    VARIABLE,
 
     EOF
 }

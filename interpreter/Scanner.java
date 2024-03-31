@@ -28,6 +28,9 @@ public class Scanner {
         keywords.put("DISPLAY", DISPLAY);
         keywords.put("SCAN", SCAN);
         keywords.put("CODE", CODE);
+        keywords.put("AND", AND);
+        keywords.put("OR", OR);
+        keywords.put("NOT", NOT);
     }
 
     List<Token> scanTokens() {
@@ -44,106 +47,6 @@ public class Scanner {
 
     private boolean isAtEnd() {
         return current >= source.length();
-    }
-
-    private void scanToken() {
-        char c = nextChar();
-        // getting the single-char tokens
-        switch(c) {
-            case '(': addToken(TokenType.LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '[': addToken(LEFT_BRACKET); break;
-            case ']': addToken(RIGHT_BRACKET); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '+': addToken(PLUS); break;
-            case '*': addToken(STAR); break;
-            case '$': addToken(NEW_LINE); break;
-            case '&': addToken(CONCAT); break;
-            case '%': addToken(MODULO); break;
-            //operators
-            case '=':
-                addToken(match('=') ? EQUAL_EVAL : ASSIGN);
-                break;
-            case '<':
-                if(match('=')) {
-                    addToken(LESS_OR_EQUAL);
-                } else if(match('>')) {
-                    addToken(NOT_EQUAL);
-                } else {
-                    addToken(LESS_THAN);
-                }
-                break;
-            case '>':
-                addToken(match('=') ? GREATER_OR_EQUAL : GREATER_THAN);
-                break;
-            // for slash
-            case '/':
-                addToken(SLASH);
-                break;
-            //comment
-            case '#':
-                while(lookAhead() != '\n' && !isAtEnd()) nextChar();
-                break;
-            //whitespaces
-            case ' ':
-            case  '\t':
-                break;
-            case '\n':
-                line++;
-                break;
-            //reserved keyword
-            case 'I':
-                if (match('F')) {
-                    addToken(IF);
-                }
-                break;
-            case 'E':
-                if (match('L') && match('S') && match('E')) {
-                    addToken(ELSE);
-                }
-                break;
-            case 'D':
-                if(match('I') && match('S') && match('P') && match('L') && match('A') && match('Y')){
-                    addToken(DISPLAY);
-                }
-                break;
-            case 'W':
-                if(match('H') && match('I') && match('L') && match('E')){
-                    addToken(WHILE);
-                }
-                break;
-            case 'C':
-                if(match('O') && match('D') && match('E')){
-                    addToken(CODE);
-                }
-                break;
-            case 'O':
-                if(match('R')){
-                    addToken(OR);
-                }
-                break;
-            case 'A':
-                if (match('N') && match('D')){
-                    addToken(AND);
-                }
-                break;
-            case 'N':
-                if (match('O') && match('T')){
-                    addToken(NOT);
-                }
-                break;
-            case '"': string(); break;
-            default:
-                if (isAlpha(c)) {
-                    identifier();
-                } else if (isDigit(c)){
-                    identifier();
-                } else {
-                    Interpreter.error(line, "Unexpected character.");
-                }
-                break;
-        }
     }
 
     private void string() {
@@ -218,8 +121,12 @@ public class Scanner {
         return c >= '0' && c <= '9';
     }
 
+    private boolean isSymbol(char c) {
+        return c == '_';
+    }
+
     private boolean isAlphaNumeric(char c){
-        return isAlpha(c) || isDigit(c);
+        return isAlpha(c) || isDigit(c) || isSymbol(c) ;
     }
 
     private void identifier() {
@@ -230,9 +137,113 @@ public class Scanner {
             String text = source.substring(start, current);
             TokenType type = keywords.get(text);
             if (type == null) {
-                type = RESERVED_KEYWORD;
+                type = VARIABLE;
             }
             addToken(type);
+        }
+    }
+
+    private void scanToken() {
+        char c = nextChar();
+        if (isAlphaNumeric(c)){
+            identifier();
+        }
+        // getting the single-char tokens
+        switch(c) {
+            case '(': addToken(TokenType.LEFT_PAREN); break;
+            case ')': addToken(RIGHT_PAREN); break;
+            case '[': addToken(LEFT_BRACKET); break;
+            case ']': addToken(RIGHT_BRACKET); break;
+            case ',': addToken(COMMA); break;
+            case '.': addToken(DOT); break;
+            case '+': addToken(PLUS); break;
+            case '*': addToken(STAR); break;
+            case '$': addToken(NEW_LINE); break;
+            case '&': addToken(CONCAT); break;
+            case '%': addToken(MODULO); break;
+
+            //operators
+            case '=':
+                addToken(match('=') ? EQUAL_EVAL : ASSIGN);
+                break;
+            case '<':
+                if(match('=')) {
+                    addToken(LESS_OR_EQUAL);
+                } else if(match('>')) {
+                    addToken(NOT_EQUAL);
+                } else {
+                    addToken(LESS_THAN);
+                }
+                break;
+            case '>':
+                addToken(match('=') ? GREATER_OR_EQUAL : GREATER_THAN);
+                break;
+            // for slash
+            case '/':
+                addToken(SLASH);
+                break;
+            //comment
+            case '#':
+                while(lookAhead() != '\n' && !isAtEnd()) nextChar();
+                break;
+            //whitespaces
+            case ' ':
+            case  '\t':
+                break;
+            case '\n':
+                line++;
+                break;
+            //reserved keyword
+            case 'I':
+                if (match('F')) {
+                    addToken(IF);
+                }
+                break;
+            case 'E':
+                if (match('L') && match('S') && match('E')) {
+                    addToken(ELSE);
+                }
+                break;
+            case 'S':
+                if (match('C') && match('A') && match('N') && match(':')){
+                    addToken(SCAN);
+                }
+                break;
+            case 'D':
+                if(match('I') && match('S') && match('P') && match('L') && match('A') && match('Y') && match(':')){
+                    addToken(DISPLAY);
+                }
+                break;
+            case 'W':
+                if(match('H') && match('I') && match('L') && match('E')){
+                    addToken(WHILE);
+                }
+                break;
+            case 'C':
+                if(match('O') && match('D') && match('E')){
+                    addToken(CODE);
+                }
+                break;
+            case 'O':
+                if(match('R')){
+                    addToken(OR);
+                }
+                break;
+            case 'A':
+                if (match('N') && match('D')){
+                    addToken(AND);
+                }
+
+                break;
+            case 'N':
+                if (match('O') && match('T')){
+                    addToken(NOT);
+                }
+                break;
+            case '"': string(); break;
+            default:
+                Interpreter.error(line, "Unexpected character.");
+                break;
         }
     }
 }
