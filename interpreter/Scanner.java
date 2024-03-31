@@ -31,6 +31,9 @@ public class Scanner {
         keywords.put("AND", AND);
         keywords.put("OR", OR);
         keywords.put("NOT", NOT);
+        keywords.put("FLOAT", FLOAT);
+        keywords.put("CHAR", CHAR);
+        keywords.put("BOOL", BOOL);
     }
 
     List<Token> scanTokens() {
@@ -155,6 +158,7 @@ public class Scanner {
         if (isAlphaNumeric(c)){
             identifier();
         }
+
         // getting the single-char tokens
         switch(c) {
             case '(': addToken(TokenType.LEFT_PAREN); break;
@@ -204,6 +208,8 @@ public class Scanner {
             case 'I':
                 if (match('F')) {
                     addToken(IF);
+                } else if (match('N') && match('T')){
+                    addToken(INT);
                 }
                 break;
             case 'E':
@@ -229,6 +235,8 @@ public class Scanner {
             case 'C':
                 if(match('O') && match('D') && match('E')){
                     addToken(CODE);
+                } else if (match('H') && match('A') && match('R')){
+                    addToken(CHAR);
                 }
                 break;
             case 'O':
@@ -245,6 +253,11 @@ public class Scanner {
             case 'N':
                 if (match('O') && match('T')){
                     addToken(NOT);
+                }
+                break;
+            case 'F':
+                if (match('L') && match('O') && match('A') && match('T')){
+                    addToken(FLOAT);
                 }
                 break;
             case '"': string(); break;
