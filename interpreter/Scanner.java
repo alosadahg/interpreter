@@ -56,20 +56,23 @@ public class Scanner {
             case ']': addToken(RIGHT_BRACKET); break;
             case ',': addToken(COMMA); break;
             case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
             case '+': addToken(PLUS); break;
             case '*': addToken(STAR); break;
             case '$': addToken(NEW_LINE); break;
             case '&': addToken(CONCAT); break;
+            case '%': addToken(MODULO); break;
             //operators
-            case '!': 
-                addToken(match('=') ? NOT_EQUAL : NOT);
-                break;
             case '=':
                 addToken(match('=') ? EQUAL_EVAL : ASSIGN);
                 break;
             case '<':
-                addToken(match('=') ? LESS_OR_EQUAL : LESS_THAN);
+                if(match('=')) {
+                    addToken(LESS_OR_EQUAL);
+                } else if(match('>')) {
+                    addToken(NOT_EQUAL);
+                } else {
+                    addToken(LESS_THAN);
+                }
                 break;
             case '>':
                 addToken(match('=') ? GREATER_OR_EQUAL : GREATER_THAN);
@@ -114,6 +117,8 @@ public class Scanner {
                 if(match('O') && match('D') && match('E')){
                     addToken(CODE);
                 }
+                break;
+            case '"': string(); break;
             default:
                 if (isAlpha(c)) {
                     identifier();
