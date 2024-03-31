@@ -9,13 +9,13 @@ enum TokenType {
     GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL, MODULO,
 
     //Keywords
-    BEGIN, END, DISPLAY, SCAN, IF, ELSE, WHILE, CODE, BOOL, TRUE, FALSE,
+    BEGIN, END, DISPLAY, SCAN, IF, ELSE, WHILE, CODE, TRUE, FALSE,
 
     //Logical Operators
     OR, AND, NOT,
 
     //data types
-    STRING, INT, FLOAT,
+    STRING, INT, FLOAT, BOOL,
 
     VARIABLE,
 
