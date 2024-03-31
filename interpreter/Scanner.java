@@ -31,6 +31,8 @@ public class Scanner {
         keywords.put("AND", AND);
         keywords.put("OR", OR);
         keywords.put("NOT", NOT);
+        keywords.put("TRUE", TRUE);
+        keywords.put("FALSE", FALSE);
     }
 
     List<Token> scanTokens() {
@@ -129,19 +131,28 @@ public class Scanner {
     }
 
     private void identifier() {
-        if (isDigit(source.charAt(start))) {
-            scanNumber();
-        } else {
-            while (isAlphaNumeric(lookAhead()))
-                nextChar();
-            String text = source.substring(start, current);
-            TokenType type = keywords.get(text);
-            if (type == null) {
+    if (isDigit(source.charAt(start))) {
+        scanNumber();
+    } else {
+        while (isAlphaNumeric(lookAhead())) {
+            nextChar();
+        }
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        if (type == null) {
+            // Check if it's a boolean literal
+            if (text.equals("TRUE") || text.equals("FALSE")) {
+                addToken(BOOL);
+            } else {
                 type = VARIABLE;
+                addToken(type);
             }
+        } else {
             addToken(type);
         }
     }
+}
+
 
     private void scanToken() {
         char c = nextChar();
