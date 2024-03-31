@@ -3,7 +3,7 @@
 - [x] Single character lexemes
 - [x] Single or paired character lexemes
 - [x] Comments
-- [ ] Numbers
+- [x] Numbers
 - [ ] Reserved Keywords  
 ### Parser 
 // milestones to be inserted

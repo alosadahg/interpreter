@@ -192,6 +192,26 @@ public class Scanner {
         return source.charAt(current++);
     }
 
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private void scanNumber(){
+        while(isDigit(lookAhead())) nextChar();
+
+        if(lookAhead() == '.' && isDigit(lookAheadNext())){
+            nextChar();
+
+            while (isDigit(lookAhead())) nextChar();
+        }
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+    
+    private char lookAheadNext(){
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current + 1);
+    }
+
     private boolean match(char expectedChar) {
         if(isAtEnd()) return false;
         if(source.charAt(current) != expectedChar) return false;
