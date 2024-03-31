@@ -174,6 +174,7 @@ public class Scanner {
                     addToken(RETURN);
                 }
                 break;
+            case '"': string(); break;
             default:
                 if (isAlpha(c)) {
                     identifier();
@@ -184,6 +185,25 @@ public class Scanner {
                 }
                 break;
         }
+    }
+
+    private void string() {
+        while (lookAhead() != '"' && !isAtEnd()) {
+            if(lookAhead() == '\n') line++;
+            nextChar();
+        }
+
+        if(isAtEnd()) {
+            Interpreter.error(line, "Unterminated String");
+            return;
+        }
+
+        // the closing "
+        nextChar();
+
+        // trim surrounding quotes
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
     }
 
     private char lookAhead() {

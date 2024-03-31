@@ -16,6 +16,9 @@ enum TokenType {
 
     RESERVED_KEYWORD,
 
+    //data types
+    STRING,
+
     NUMBER,
     EOF
 }
