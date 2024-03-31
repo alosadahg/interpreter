@@ -1,4 +1,5 @@
 package interpreter;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,21 +21,14 @@ public class Scanner {
 
     static {
         keywords = new HashMap<>();
-        keywords.put("and",    AND);
-        keywords.put("class",  CLASS);
-        keywords.put("else",   ELSE);
-        keywords.put("false",  FALSE);
-        keywords.put("for",    FOR);
-        keywords.put("func",    FUNC);
-        keywords.put("if",     IF);
-        keywords.put("or",     OR);
-        keywords.put("print",  PRINT);
-        keywords.put("return", RETURN);
-        keywords.put("super",  SUPER);
-        keywords.put("this",   THIS);
-        keywords.put("true",   TRUE);
-        keywords.put("var",    VAR);
-        keywords.put("while",  WHILE);
+        keywords.put("ELSE",   ELSE);
+        keywords.put("IF",     IF);
+        keywords.put("WHILE",  WHILE);
+        keywords.put("BEGIN", BEGIN);
+        keywords.put("END", END);
+        keywords.put("DISPLAY", DISPLAY);
+        keywords.put("SCAN", SCAN);
+        keywords.put("CODE", CODE);
     }
 
     List<Token> scanTokens() {
@@ -97,82 +91,30 @@ public class Scanner {
                 line++;
                 break;
             //reserved keyword
-            case 'i':
-                if (match('f')) {
+            case 'I':
+                if (match('F')) {
                     addToken(IF);
                 }
                 break;
-            case 'a':
-                if (match('n') && match('d')) {
-                    addToken(AND);
-                }
-                break;
-            case 'c':
-                if (match('l') && match('l') && match('a')
-                        && match('s') && match('s')) {
-                    addToken(CLASS);
-                }
-                break;
-            case 'e':
-                if (match('l') && match('s') && match('e')) {
+            case 'E':
+                if (match('L') && match('S') && match('E')) {
                     addToken(ELSE);
                 }
                 break;
-            case 'f':
-                if (match('a') && match('l') && match('s') && match('e')) {
-                    addToken(FALSE);
-                }
-                if (match('u') && match('n') && match('c')) {
-                    addToken(FUNC);
-                }
-                if (match('o') && match('r')) {
-                    addToken(FOR);
+            case 'D':
+                if(match('I') && match('S') && match('P') && match('L') && match('A') && match('Y')){
+                    addToken(DISPLAY);
                 }
                 break;
-            case 't':
-                if(match('r') && match('u') && match('e')){
-                    addToken(TRUE);
-                }
-                if(match('h') && match('i') && match('s')) {
-                    addToken(THIS);
-                }
-                break;
-            case 'n':
-                if(match('u') && match('l') && match('l')){
-                    addToken(NULL);
-                }
-                break;
-            case 'p':
-                if(match('r') && match('i') && match('n') && match('t')){
-                    addToken(PRINT);
-                }
-                break;
-            case 's':
-                if(match('u') && match('p') && match('e') && match('r')){
-                    addToken(SUPER);
-                }
-                break;
-            case 'w':
-                if(match('h') && match('i') && match('l') && match('e')){
+            case 'W':
+                if(match('H') && match('I') && match('L') && match('E')){
                     addToken(WHILE);
                 }
                 break;
-            case 'v':
-                if(match('a') && match('r')){
-                    addToken(VAR);
+            case 'C':
+                if(match('O') && match('D') && match('E')){
+                    addToken(CODE);
                 }
-                break;
-            case 'o':
-                if(match('r')){
-                    addToken(OR);
-                }
-                break;
-            case 'r':
-                if(match('e') && match('t') && match('u')
-                        && match('r') && match('n')) {
-                    addToken(RETURN);
-                }
-                break;
             default:
                 if (isAlpha(c)) {
                     identifier();

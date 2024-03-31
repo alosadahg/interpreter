@@ -9,8 +9,7 @@ enum TokenType {
     GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL,
 
     //Keywords
-    AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, 
-    NULL, OR, PRINT, SUPER, THIS, TRUE, VAR, WHILE, RETURN,
+    BEGIN, END, DISPLAY, SCAN, IF, ELSE, WHILE, CODE,
 
     //Code Block Start
 
