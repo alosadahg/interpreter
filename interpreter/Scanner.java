@@ -52,6 +52,14 @@ public class Scanner {
         return current >= source.length();
     }
 
+    private void character() {
+        char val = nextChar();
+        if(lookAhead() == '\'') {
+            nextChar();
+            addToken(CHAR, val);
+        }
+    }
+
     private void string() {
         while (lookAhead() != '"' && !isAtEnd()) {
             if (lookAhead() == '\n')
@@ -344,6 +352,7 @@ public class Scanner {
                 }
                 break;
             case '"': string(); break;
+            case '\'': character(); break;
             default:
                 if (isAlphaNumeric(c)) {
                     break;
