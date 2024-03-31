@@ -2,7 +2,7 @@ package interpreter;
 enum TokenType {
     // Single-character tokens
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACKET, RIGHT_BRACKET, COMMA,
-    DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, NEW_LINE, CONCAT,
+    DOT, MINUS, PLUS, SLASH, STAR, NEW_LINE, CONCAT, NEGATIVE, POSITIVE,
 
     //One or two character token pair
     NOT, NOT_EQUAL, ASSIGN, EQUAL_EVAL, GREATER_THAN,

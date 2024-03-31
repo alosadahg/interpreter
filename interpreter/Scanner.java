@@ -63,22 +63,23 @@ public class Scanner {
             case ']': addToken(RIGHT_BRACKET); break;
             case ',': addToken(COMMA); break;
             case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
             case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
             case '$': addToken(NEW_LINE); break;
             case '&': addToken(CONCAT); break;
             case '%': addToken(MODULO); break;
             //operators
-            case '!': 
-                addToken(match('=') ? NOT_EQUAL : NOT);
-                break;
             case '=':
                 addToken(match('=') ? EQUAL_EVAL : ASSIGN);
                 break;
             case '<':
-                addToken(match('=') ? LESS_OR_EQUAL : LESS_THAN);
+                if(match('=')) {
+                    addToken(LESS_OR_EQUAL);
+                } else if(match('>')) {
+                    addToken(NOT_EQUAL);
+                } else {
+                    addToken(LESS_THAN);
+                }
                 break;
             case '>':
                 addToken(match('=') ? GREATER_OR_EQUAL : GREATER_THAN);
@@ -99,13 +100,13 @@ public class Scanner {
                 line++;
                 break;
             //reserved keyword
-            case 'i':
-                if (match('f')) {
+            case 'I':
+                if (match('F')) {
                     addToken(IF);
                 }
                 break;
-            case 'a':
-                if (match('n') && match('d')) {
+            case 'A':
+                if (match('N') && match('D')) {
                     addToken(AND);
                 }
                 break;
@@ -115,8 +116,8 @@ public class Scanner {
                     addToken(CLASS);
                 }
                 break;
-            case 'e':
-                if (match('l') && match('s') && match('e')) {
+            case 'E':
+                if (match('L') && match('S') && match('E')) {
                     addToken(ELSE);
                 }
                 break;
@@ -154,8 +155,8 @@ public class Scanner {
                     addToken(SUPER);
                 }
                 break;
-            case 'w':
-                if(match('h') && match('i') && match('l') && match('e')){
+            case 'W':
+                if(match('H') && match('I') && match('L') && match('E')){
                     addToken(WHILE);
                 }
                 break;
@@ -164,8 +165,8 @@ public class Scanner {
                     addToken(VAR);
                 }
                 break;
-            case 'o':
-                if(match('r')){
+            case 'O':
+                if(match('R')){
                     addToken(OR);
                 }
                 break;
