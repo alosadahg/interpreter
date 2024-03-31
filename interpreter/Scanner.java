@@ -142,7 +142,7 @@ public class Scanner {
         if (type == null) {
             // Check if it's a boolean literal
             if (text.equals("TRUE") || text.equals("FALSE")) {
-                addToken(BOOL);
+                addToken(BOOL, new Bool(text));
             } else {
                 type = VARIABLE;
                 addToken(type);
