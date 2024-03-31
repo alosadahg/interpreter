@@ -220,6 +220,7 @@ public class Scanner {
     private void scanNumber(){
         while(isDigit(lookAhead())) nextChar();
 
+        
         if(lookAhead() == '.' && isDigit(lookAheadNext())){
             nextChar();
 
