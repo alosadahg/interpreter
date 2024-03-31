@@ -176,6 +176,8 @@ public class Scanner {
             default:
                 if (isAlpha(c)) {
                     identifier();
+                } else if (isDigit(c)){
+                    identifier();
                 } else {
                     Interpreter.error(line, "Unexpected character.");
                 }
@@ -238,12 +240,16 @@ public class Scanner {
     }
 
     private void identifier() {
-        while (isAlphaNumeric(lookAhead())) nextChar();
-        String text = source.substring(start, current);
-        TokenType type = keywords.get(text);
-        if (type == null) {
-            type = RESERVED_KEYWORD;
+        if (isDigit(source.charAt(start))) {
+            scanNumber();
+        } else {
+            while (isAlphaNumeric(lookAhead())) nextChar();
+            String text = source.substring(start, current);
+            TokenType type = keywords.get(text);
+            if (type == null) {
+                type = RESERVED_KEYWORD;
+            }
+            addToken(type);
         }
-        addToken(type);
     }
 }
