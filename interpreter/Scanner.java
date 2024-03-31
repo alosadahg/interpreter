@@ -192,10 +192,6 @@ public class Scanner {
         return source.charAt(current++);
     }
 
-    private boolean isDigit(char c) {
-        return c >= '0' && c <= '9';
-    }
-
     private void scanNumber(){
         while(isDigit(lookAhead())) nextChar();
 
