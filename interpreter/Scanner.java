@@ -139,17 +139,19 @@ public class Scanner {
         }
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
+
         if (type == null) {
             // Check if it's a boolean literal
+            type = VARIABLE;
+            addToken(type);
+        } else {
             if (text.equals("TRUE") || text.equals("FALSE")) {
-                addToken(BOOL, new Bool(text));
+                addToken(BOOL);
             } else {
-                type = VARIABLE;
                 addToken(type);
             }
-        } else {
-            addToken(type);
         }
+
     }
 }
 
