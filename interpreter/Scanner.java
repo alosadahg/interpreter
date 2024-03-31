@@ -222,8 +222,10 @@ public class Scanner {
             nextChar();
 
             while (isDigit(lookAhead())) nextChar();
+            addToken(FLOAT, Double.parseDouble(source.substring(start, current)));
+        } else {
+            addToken(INT, Integer.parseInt(source.substring(start, current)));
         }
-        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
     
     private char lookAheadNext(){
