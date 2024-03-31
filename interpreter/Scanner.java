@@ -26,8 +26,6 @@ public class Scanner {
         keywords.put("WHILE", WHILE);
         keywords.put("BEGIN", BEGIN);
         keywords.put("END", END);
-        keywords.put("DISPLAY", DISPLAY);
-        keywords.put("SCAN", SCAN);
         keywords.put("CODE", CODE);
         keywords.put("AND", AND);
         keywords.put("OR", OR);
@@ -194,7 +192,7 @@ public class Scanner {
     }
 
     private boolean isSymbol(char c) {
-        return c == '_';
+        return (c == '_' || c == ':');
     }
 
     private boolean isAlphaNumeric(char c) {
@@ -210,7 +208,13 @@ public class Scanner {
             String text = source.substring(start, current);
             TokenType type = keywords.get(text);
             if (type == null) {
-                type = VARIABLE;
+                if(text.equals("SCAN:")){
+                    type = SCAN;
+                } else if (text.equals("DISPLAY:")) {
+                    type = DISPLAY;
+                } else {
+                    type = VARIABLE;
+                }
             }
             addToken(type);
         }
@@ -267,7 +271,7 @@ public class Scanner {
                     if (hasDigit(start-1)) {
                         addToken(MINUS);
                     }
-                } 
+                }
                 break;
             case '=':
                 addToken(match('=') ? EQUAL_EVAL : ASSIGN);
@@ -311,16 +315,6 @@ public class Scanner {
             case 'E':
                 if (match('L') && match('S') && match('E')) {
                     addToken(ELSE);
-                }
-                break;
-            case 'S':
-                if (match('C') && match('A') && match('N') && match(':')) {
-                    addToken(SCAN);
-                }
-                break;
-            case 'D':
-                if (match('I') && match('S') && match('P') && match('L') && match('A') && match('Y') && match(':')) {
-                    addToken(DISPLAY);
                 }
                 break;
             case 'W':
