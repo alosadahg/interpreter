@@ -33,6 +33,7 @@ public class Scanner {
         keywords.put("FLOAT", FLOAT);
         keywords.put("CHAR", CHAR);
         keywords.put("BOOL", BOOL);
+        keywords.put("INT", INT);
     }
 
     List<Token> scanTokens() {
