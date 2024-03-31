@@ -132,7 +132,8 @@ public class Scanner {
         if (isDigit(source.charAt(start))) {
             scanNumber();
         } else {
-            while (isAlphaNumeric(lookAhead())) nextChar();
+            while (isAlphaNumeric(lookAhead()))
+                nextChar();
             String text = source.substring(start, current);
             TokenType type = keywords.get(text);
             if (type == null) {
@@ -144,7 +145,7 @@ public class Scanner {
 
     private void scanToken() {
         char c = nextChar();
-        if (isAlphaNumeric(c)){
+        if (isAlpha(c) || isDigit(c) || isSymbol(c)){
             identifier();
         }
         // getting the single-char tokens
@@ -241,7 +242,11 @@ public class Scanner {
                 break;
             case '"': string(); break;
             default:
-                Interpreter.error(line, "Unexpected character.");
+                if(isAlphaNumeric(c)){
+                    break;
+                } else {
+                    Interpreter.error(line, "Unexpected character.");
+                }
                 break;
         }
     }
