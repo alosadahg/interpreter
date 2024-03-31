@@ -1,5 +1,4 @@
 package interpreter;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,14 +52,15 @@ public class Scanner {
         switch(c) {
             case '(': addToken(TokenType.LEFT_PAREN); break;
             case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
+            case '[': addToken(LEFT_BRACKET); break;
+            case ']': addToken(RIGHT_BRACKET); break;
             case ',': addToken(COMMA); break;
             case '.': addToken(DOT); break;
             case '-': addToken(MINUS); break;
             case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+            case '$': addToken(NEW_LINE); break;
+            case '&': addToken(CONCAT); break;
             //operators
             case '!': 
                 addToken(match('=') ? NOT_EQUAL : NOT);
@@ -76,12 +76,11 @@ public class Scanner {
                 break;
             // for slash
             case '/':
-                if(match('/')) {
-                    // comment goes on until new line
-                    while(lookAhead() != '\n' && !isAtEnd()) nextChar();
-                } else {
-                    addToken(SLASH);
-                }
+                addToken(SLASH);
+                break;
+            //comment
+            case '#':
+                while(lookAhead() != '\n' && !isAtEnd()) nextChar();
                 break;
             //whitespaces
             case ' ':
@@ -127,6 +126,25 @@ public class Scanner {
         }
     }
 
+    private void string() {
+        while (lookAhead() != '"' && !isAtEnd()) {
+            if(lookAhead() == '\n') line++;
+            nextChar();
+        }
+
+        if(isAtEnd()) {
+            Interpreter.error(line, "Unterminated String");
+            return;
+        }
+
+        // the closing "
+        nextChar();
+
+        // trim surrounding quotes
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
+    }
+
     private char lookAhead() {
         if (isAtEnd()) return '\0';
         return source.charAt(current);
@@ -143,8 +161,10 @@ public class Scanner {
             nextChar();
 
             while (isDigit(lookAhead())) nextChar();
+            addToken(FLOAT, Double.parseDouble(source.substring(start, current)));
+        } else {
+            addToken(INT, Integer.parseInt(source.substring(start, current)));
         }
-        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
     
     private char lookAheadNext(){
