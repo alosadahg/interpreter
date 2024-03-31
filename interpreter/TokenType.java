@@ -5,19 +5,19 @@ enum TokenType {
     DOT, MINUS, PLUS, SLASH, STAR, NEW_LINE, CONCAT, NEGATIVE, POSITIVE,
 
     //One or two character token pair
-    NOT_EQUAL, ASSIGN, EQUAL_EVAL, GREATER_THAN,
+    NOT, NOT_EQUAL, ASSIGN, EQUAL_EVAL, GREATER_THAN,
     GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL, MODULO,
 
     //Keywords
-    BEGIN, END, DISPLAY, SCAN, IF, ELSE, WHILE, CODE,
+    AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, 
+    NULL, OR, PRINT, SUPER, THIS, TRUE, VAR, WHILE, RETURN,
 
-    //Logical Operators
-    OR, AND, NOT,
+    //Code Block Start
+
+    RESERVED_KEYWORD,
 
     //data types
     STRING, INT, FLOAT,
-
-    VARIABLE,
 
     EOF
 }
