@@ -1,4 +1,5 @@
 package interpreter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +21,9 @@ public class Scanner {
 
     static {
         keywords = new HashMap<>();
-        keywords.put("ELSE",   ELSE);
-        keywords.put("IF",     IF);
-        keywords.put("WHILE",  WHILE);
+        keywords.put("ELSE", ELSE);
+        keywords.put("IF", IF);
+        keywords.put("WHILE", WHILE);
         keywords.put("BEGIN", BEGIN);
         keywords.put("END", END);
         keywords.put("DISPLAY", DISPLAY);
@@ -34,13 +35,13 @@ public class Scanner {
     }
 
     List<Token> scanTokens() {
-        while(!isAtEnd()) {
+        while (!isAtEnd()) {
             // start of lexeme
             start = current;
             scanToken();
         }
 
-        // EOF -> End of File 
+        // EOF -> End of File
         // tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
@@ -51,11 +52,12 @@ public class Scanner {
 
     private void string() {
         while (lookAhead() != '"' && !isAtEnd()) {
-            if(lookAhead() == '\n') line++;
+            if (lookAhead() == '\n')
+                line++;
             nextChar();
         }
 
-        if(isAtEnd()) {
+        if (isAtEnd()) {
             Interpreter.error(line, "Unterminated String");
             return;
         }
@@ -65,9 +67,9 @@ public class Scanner {
 
         // trim surrounding quotes
         String value = source.substring(start + 1, current - 1);
-        if(value.equals("TRUE")) {
+        if (value.equals("TRUE")) {
             addToken(BOOL, TRUE);
-        } else if(value.equals("FALSE")) {
+        } else if (value.equals("FALSE")) {
             addToken(BOOL, FALSE);
         } else {
             addToken(STRING, value);
@@ -75,7 +77,8 @@ public class Scanner {
     }
 
     private char lookAhead() {
-        if (isAtEnd()) return '\0';
+        if (isAtEnd())
+            return '\0';
         return source.charAt(current);
     }
 
@@ -83,29 +86,38 @@ public class Scanner {
         return source.charAt(current++);
     }
 
-    private void scanNumber(){
-        while(isDigit(lookAhead())) nextChar();
-
-        
-        if(lookAhead() == '.' && isDigit(lookAheadNext())){
+    private void scanNumber() {
+        while (isDigit(lookAhead()))
+            nextChar();
+        boolean isNegative = false;
+        if (source.substring(start, start+1).equals("-")) {
+            isNegative = true;
+        }
+        String value = source.substring(start, current);
+        if (lookAhead() == '.' && isDigit(lookAheadNext())) {
             nextChar();
 
-            while (isDigit(lookAhead())) nextChar();
-            addToken(FLOAT, Double.parseDouble(source.substring(start, current)));
+            while (isDigit(lookAhead()))
+                nextChar();
+            value = source.substring(start, current);
+            addToken(FLOAT, (isNegative) ? "NEGATIVE" : "POSITIVE" , Double.parseDouble(value));
         } else {
-            addToken(INT, Integer.parseInt(source.substring(start, current)));
+            addToken(INT, (isNegative) ? "NEGATIVE" : "POSITIVE" , Integer.parseInt(value));
         }
     }
-    
-    private char lookAheadNext(){
-        if (current + 1 >= source.length()) return '\0';
+
+    private char lookAheadNext() {
+        if (current + 1 >= source.length())
+            return '\0';
         return source.charAt(current + 1);
     }
 
     private boolean match(char expectedChar) {
-        if(isAtEnd()) return false;
-        if(source.charAt(current) != expectedChar) return false;
-        
+        if (isAtEnd())
+            return false;
+        if (source.charAt(current) != expectedChar)
+            return false;
+
         current++;
         return true;
     }
@@ -117,6 +129,49 @@ public class Scanner {
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
+    }
+
+    private void addToken(TokenType type, String lexeme, Object literal) {
+        tokens.add(new Token(type, lexeme, literal, line));
+    }
+
+    private boolean hasDigit(int i) {
+        while(i>=0) {
+            char c = source.charAt(i);
+            if(isDigit(c)) {
+                return true;
+            } else if(isWhitespace(c) || isOperator(c)) {
+                i--;
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasOperator(int i) {
+        while(i>=0) {
+            char c = source.charAt(i);
+            if(isOperator(c)) {
+                return true;
+            } else if(isWhitespace(c)) {
+                i--;
+                continue;
+            } else if(isDigit(c)) {
+                return false;
+            }
+            i--;
+        }
+        return false;
+    }
+
+    private boolean isWhitespace(char c) {
+        return c == ' ';
+    }
+
+    private boolean isOperator(char c) {
+        return c == '+' || c == '-' || c == '/' || c == '%';
     }
 
     private boolean isAlpha(char c) {
@@ -131,15 +186,16 @@ public class Scanner {
         return c == '_';
     }
 
-    private boolean isAlphaNumeric(char c){
-        return isAlpha(c) || isDigit(c) || isSymbol(c) ;
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c) || isSymbol(c);
     }
 
     private void identifier() {
         if (isDigit(source.charAt(start))) {
             scanNumber();
         } else {
-            while (isAlphaNumeric(lookAhead())) nextChar();
+            while (isAlphaNumeric(lookAhead()))
+                nextChar();
             String text = source.substring(start, current);
             TokenType type = keywords.get(text);
             if (type == null) {
@@ -152,31 +208,62 @@ public class Scanner {
 
     private void scanToken() {
         char c = nextChar();
-        if (isAlphaNumeric(c)){
+        if (isAlphaNumeric(c)) {
             identifier();
         }
         // getting the single-char tokens
-        switch(c) {
-            case '(': addToken(TokenType.LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '[': addToken(LEFT_BRACKET); break;
-            case ']': addToken(RIGHT_BRACKET); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '+': addToken(PLUS); break;
-            case '*': addToken(STAR); break;
-            case '$': addToken(NEW_LINE); break;
-            case '&': addToken(CONCAT); break;
-            case '%': addToken(MODULO); break;
+        switch (c) {
+            case '(':
+                addToken(TokenType.LEFT_PAREN);
+                break;
+            case ')':
+                addToken(RIGHT_PAREN);
+                break;
+            case '[':
+                addToken(LEFT_BRACKET);
+                break;
+            case ']':
+                addToken(RIGHT_BRACKET);
+                break;
+            case ',':
+                addToken(COMMA);
+                break;
+            case '.':
+                addToken(DOT);
+                break;
+            case '+':
+                addToken(PLUS);
+                break;
+            case '*':
+                addToken(STAR);
+                break;
+            case '$':
+                addToken(NEW_LINE);
+                break;
+            case '&':
+                addToken(CONCAT);
+                break;
+            case '%':
+                addToken(MODULO);
+                break;
 
-            //operators
+            // operators
+            case '-':
+                if (start==0 || (isDigit(source.charAt(current)) && hasOperator(start-1))) {
+                    scanNumber();
+                } else {
+                    if (hasDigit(start-1)) {
+                        addToken(MINUS);
+                    }
+                } 
+                break;
             case '=':
                 addToken(match('=') ? EQUAL_EVAL : ASSIGN);
                 break;
             case '<':
-                if(match('=')) {
+                if (match('=')) {
                     addToken(LESS_OR_EQUAL);
-                } else if(match('>')) {
+                } else if (match('>')) {
                     addToken(NOT_EQUAL);
                 } else {
                     addToken(LESS_THAN);
@@ -189,18 +276,19 @@ public class Scanner {
             case '/':
                 addToken(SLASH);
                 break;
-            //comment
+            // comment
             case '#':
-                while(lookAhead() != '\n' && !isAtEnd()) nextChar();
+                while (lookAhead() != '\n' && !isAtEnd())
+                    nextChar();
                 break;
-            //whitespaces
+            // whitespaces
             case ' ':
-            case  '\t':
+            case '\t':
                 break;
             case '\n':
                 line++;
                 break;
-            //reserved keyword
+            // reserved keyword
             case 'I':
                 if (match('F')) {
                     addToken(IF);
@@ -212,46 +300,48 @@ public class Scanner {
                 }
                 break;
             case 'S':
-                if (match('C') && match('A') && match('N') && match(':')){
+                if (match('C') && match('A') && match('N') && match(':')) {
                     addToken(SCAN);
                 }
                 break;
             case 'D':
-                if(match('I') && match('S') && match('P') && match('L') && match('A') && match('Y') && match(':')){
+                if (match('I') && match('S') && match('P') && match('L') && match('A') && match('Y') && match(':')) {
                     addToken(DISPLAY);
                 }
                 break;
             case 'W':
-                if(match('H') && match('I') && match('L') && match('E')){
+                if (match('H') && match('I') && match('L') && match('E')) {
                     addToken(WHILE);
                 }
                 break;
             case 'C':
-                if(match('O') && match('D') && match('E')){
+                if (match('O') && match('D') && match('E')) {
                     addToken(CODE);
                 }
                 break;
             case 'O':
-                if(match('R')){
+                if (match('R')) {
                     addToken(OR);
                 }
                 break;
             case 'A':
-                if (match('N') && match('D')){
+                if (match('N') && match('D')) {
                     addToken(AND);
                 }
 
                 break;
             case 'N':
-                if (match('O') && match('T')){
+                if (match('O') && match('T')) {
                     addToken(NOT);
                 }
                 break;
-            case '"': string(); break;
+            case '"':
+                string();
+                break;
             default:
-                if(isAlphaNumeric(c)){
+                if (isAlphaNumeric(c)) {
                     break;
-                } else{
+                } else {
                     Interpreter.error(line, "Unexpected character.");
                 }
                 break;
