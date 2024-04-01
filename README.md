@@ -4,7 +4,7 @@
 - [x] Single or paired character lexemes
 - [x] Comments
 - [x] Numbers
-- [ ] Reserved Keywords  
+- [x] Reserved Keywords  
 ### Parser 
 // milestones to be inserted
 ### Semantic Analyzer  
